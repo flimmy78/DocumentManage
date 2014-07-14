@@ -8,10 +8,10 @@ using DocumentManage.Entities;
 using DocumentManage.Utility;
 using DocumentManage.Views.Req;
 using DocumentManageService.Web;
-
+//归档审核
 namespace DocumentManage.Views.Aud
 {
-    //审批驳回页面
+    //归档审核 -- 已驳回页面
     public partial class Returned : Page
     {
         private readonly WorkflowDomainContext flowContext = new WorkflowDomainContext();

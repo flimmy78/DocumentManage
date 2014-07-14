@@ -15,10 +15,10 @@ using DocumentManage.Entities;
 using DocumentManage.Utility;
 using DocumentManage.Views.Req;
 using DocumentManageService.Web;
-
+//归档审核
 namespace DocumentManage.Views.Aud
 {   
-    //已审批页面
+    //归档审核 -- 已审批页面
     public partial class Audited : Page
     {
         private readonly WorkflowDomainContext flowContext = new WorkflowDomainContext();

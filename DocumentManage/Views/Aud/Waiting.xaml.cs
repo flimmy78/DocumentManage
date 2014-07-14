@@ -8,24 +8,25 @@ using DocumentManage.Entities;
 using DocumentManage.Utility;
 using DocumentManage.Views.Req;
 using DocumentManageService.Web;
-
+//归档审核
 namespace DocumentManage.Views.Aud
 {
-    //审批中页面
+    //归档审核 -- 待审批页面
     public partial class Waiting : Page
     {
         private readonly WorkflowDomainContext flowContext = new WorkflowDomainContext();
         private readonly EnumToStringValueConverter enumToStringConverter = new EnumToStringValueConverter();
         private PagedCollectionView pcv;
+
         public Waiting()
         {
             InitializeComponent();
-            ArchiveFlowGrid.LoadingRow += ArchiveFlowGridLoadingRow;
+            ArchiveFlowGrid.LoadingRow += ArchiveFlowGridLoadingRow;  //添加DataGrid加载行事件
         }
 
         private void ArchiveFlowGridLoadingRow(object sender, DataGridRowEventArgs e)
         {
-            e.Row.MouseLeftButtonUp += OnGridRowLeftButtonUp;
+            e.Row.MouseLeftButtonUp += OnGridRowLeftButtonUp; //添加了GataGrid左键双击事件
         }
 
         private void OnGridRowLeftButtonUp(object sender, MouseButtonEventArgs e)
