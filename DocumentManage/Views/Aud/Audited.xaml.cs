@@ -17,7 +17,8 @@ using DocumentManage.Views.Req;
 using DocumentManageService.Web;
 
 namespace DocumentManage.Views.Aud
-{
+{   
+    //审核页面
     public partial class Audited : Page
     {
         private readonly WorkflowDomainContext flowContext = new WorkflowDomainContext();
