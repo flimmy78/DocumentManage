@@ -1,0 +1,59 @@
+﻿<navigation:Page xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"  x:Class="DocumentManage.Home" 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
+                 xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
+                 xmlns:controls="clr-namespace:DocumentManage.Controls" 
+                 d:DesignWidth="1024" d:DesignHeight="300" mc:Ignorable="d"
+    Style="{StaticResource PageStyle}">
+
+    <Grid x:Name="LayoutRoot">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel x:Name="messagesStackpanel" Margin="10">
+            <sdk:Label Content="系统消息列表" Foreground="White"></sdk:Label>
+            <sdk:DataGrid x:Name="gridMessages" MinHeight="100" IsReadOnly="True" MouseLeftButtonUp="OnMessageItemClick"></sdk:DataGrid>
+        </StackPanel>
+        <Border Grid.Column="1" Grid.RowSpan="3" Margin="10" CornerRadius="10" BorderBrush="White" BorderThickness="1" Padding="5">
+            <Grid  x:Name="createMsgForm">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="160" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="30" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <sdk:Label Content="添加系统消息" Foreground="White" Grid.Column="1" />
+                <sdk:Label Content="标题" Style="{StaticResource ItemTitleLabelStyle}" Foreground="White" Grid.Row="1" />
+                <sdk:Label Content="内容" Style="{StaticResource ItemTitleLabelStyle}" Foreground="White" Grid.Row="2"  />
+                <sdk:Label Content="提醒次数" Style="{StaticResource ItemTitleLabelStyle}" Foreground="White" Grid.Row="3"  />
+                <sdk:Label Content="阅读权限" Style="{StaticResource ItemTitleLabelStyle}" Foreground="White" Grid.Row="4"  />
+                <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtTitle" MaxLength="32" />
+                <TextBox Grid.Row="2" Grid.Column="1" Height="60" x:Name="txtContent" TextWrapping="Wrap" AcceptsReturn="True" MaxLength="200" />
+                <toolkit:NumericUpDown Grid.Row="3" Grid.Column="1" Width="80" HorizontalAlignment="Left" Minimum="1" Maximum="100" Value="3" 
+                                       x:Name="numRemindTimes" DecimalPlaces="0" Foreground="White" BorderBrush="White" />
+                <StackPanel Grid.Row="4" Grid.Column="1">
+                    <TextBlock x:Name="txtMsgReleaseInfo" MinHeight="30" TextWrapping="Wrap" Foreground="Yellow" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="btnReleaseOrg" Content="添加组织" Click="OnReleaseOrgButtonClick"  Style="{StaticResource BlueButton}" />
+                        <Button x:Name="btnReleaseUser" Content="添加用户" Click="OnReleaseUserButtonClick" Margin="3,0" Style="{StaticResource BlueButton}" />
+                    </StackPanel>
+                </StackPanel>
+                <Button x:Name="btnReleaseMsg" Content="确定发布" Click="OnReleaseMessageButtonClick" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Width="120" Margin="0,10" Style="{StaticResource OrangeButton}" />
+            </Grid>
+        </Border>
+        <controls:BusyIndicator x:Name="BusyIndicator1" Grid.ColumnSpan="2" IsBusy="False" />
+    </Grid>
+
+</navigation:Page>

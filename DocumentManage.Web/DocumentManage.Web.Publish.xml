@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="E:\Projects\DocumentManage\Publish" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="配置文件1" publishMethod="FileSystem" replaceMatchingFiles="True" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
+    <file relUrl="Web.config" publishTime="07/09/2014 15:23:57" />
+    <file relUrl="bin/DocumentManageService.Web.pdb" publishTime="07/09/2014 15:22:04" />
+    <file relUrl="Web.Debug.config" publishTime="09/12/2013 12:49:11" />
+    <file relUrl="DocumentManage.Web.Publish.xml" publishTime="07/09/2014 15:22:54" />
+    <file relUrl="DocumentManage.Web.csproj" publishTime="07/09/2014 15:23:45" />
+    <file relUrl="bin/DocumentManage.Web.pdb" publishTime="07/09/2014 15:23:56" />
+    <file relUrl="ClassDiagram1.cd" publishTime="07/08/2014 09:35:59" />
+    <file relUrl="bin/DocumentManageService.Web.dll" publishTime="07/09/2014 15:22:04" />
+    <file relUrl="bin/DocumentManage.Utility.pdb" publishTime="07/09/2014 15:21:55" />
+    <file relUrl="bin/DocumentManage.Entities.dll" publishTime="07/09/2014 15:21:58" />
+    <file relUrl="Properties/AssemblyInfo.cs" publishTime="09/12/2013 12:49:11" />
+    <file relUrl="clientaccesspolicy.xml" publishTime="09/13/2013 12:51:41" />
+    <file relUrl="DocumentManage.Web.csproj.user" publishTime="07/09/2014 15:23:45" />
+    <file relUrl="bin/DocumentManage.Entities.pdb" publishTime="07/09/2014 15:21:58" />
+    <file relUrl="bin/DocumentManage.Utility.dll" publishTime="07/09/2014 15:21:56" />
+    <file relUrl="Web.Release.config" publishTime="09/12/2013 12:49:11" />
+    <file relUrl="ClientBin/DocumentManage.xap" publishTime="07/09/2014 15:22:03" />
+    <file relUrl="Silverlight.js" publishTime="09/12/2013 12:49:13" />
+    <file relUrl="bin/DocumentManage.Web.dll" publishTime="07/09/2014 15:23:56" />
+    <file relUrl="Index.aspx" publishTime="09/12/2013 12:49:12" />
+  </publishProfile>
+</publishData>

@@ -1,0 +1,2 @@
+先安装vs2010sp1， silverlight4.0， silverlight5.0， SQL2005
+还原数据库 “数据库备份(SQL 2005).bak”

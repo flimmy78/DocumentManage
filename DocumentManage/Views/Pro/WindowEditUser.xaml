@@ -1,0 +1,164 @@
+﻿<controls:ChildWindow xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"  x:Class="DocumentManage.Views.Pro.WindowEditUser"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+                      xmlns:util="clr-namespace:DocumentManage.Utility"
+                      xmlns:sdk="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input"
+                      xmlns:controls2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data"
+                      xmlns:local="clr-namespace:DocumentManage.Controls" Width="800" Height="600" 
+           Title="编辑用户信息"  Loaded="OnWindowLoaded">
+    <controls:ChildWindow.Resources>
+        <util:EnumToStringValueConverter x:Key="EnumToStringConverter"/>
+    </controls:ChildWindow.Resources>
+    <Grid x:Name="LayoutRoot" Margin="2">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <local:BusyIndicator x:Name="BusyIndicator1" />
+        <controls:TabControl Margin="10">
+            <controls:TabItem Header="用户信息">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <toolkit:DataForm Background="{StaticResource ControlBackgroundNormal}" CommandButtonsVisibility="None"
+                                      x:Name="EditUserInfoForm">
+                        <toolkit:DataForm.EditTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <toolkit:DataField>
+                                        <TextBox Text="{Binding UserCode, Mode=TwoWay, ValidatesOnDataErrors=True}" TextChanged="OnFormItemChanged" />
+                                    </toolkit:DataField>
+                                    <toolkit:DataField Grid.Column="1">
+                                        <TextBox Text="{Binding UserName, Mode=TwoWay, ValidatesOnDataErrors=True}" TextChanged="OnFormItemChanged"  />
+                                    </toolkit:DataField>
+                                    <toolkit:DataField Grid.Column="2">
+                                        <PasswordBox Password="{Binding UserPassword, Mode=TwoWay, ValidatesOnDataErrors=True}" PasswordChanged="OnFormItemChanged" />
+                                    </toolkit:DataField>
+                                    <toolkit:DataField Grid.Row="1">
+                                        <ComboBox ItemsSource="{StaticResource GenderNames}" 
+                                                        SelectedItem="{Binding Path=Gender, Mode=TwoWay, Converter={StaticResource EnumToStringConverter}}" SelectionChanged="OnFormItemChanged"  />
+                                    </toolkit:DataField>
+                                    <toolkit:DataField Grid.Row="1" Grid.Column="1">
+                                        <TextBox Text="{Binding RealName, Mode=TwoWay, ValidatesOnDataErrors=True}" TextChanged="OnFormItemChanged" />
+                                    </toolkit:DataField>
+                                    <toolkit:DataField Grid.Row="1" Grid.Column="2">
+                                        <TextBox Text="{Binding Telphone, Mode=TwoWay, ValidatesOnDataErrors=True}" TextChanged="OnFormItemChanged" />
+                                    </toolkit:DataField>
+                                    <toolkit:DataField Grid.Row="2">
+                                        <TextBox Text="{Binding Mobile, Mode=TwoWay, ValidatesOnDataErrors=True}" TextChanged="OnFormItemChanged" />
+                                    </toolkit:DataField>
+                                    <toolkit:DataField Grid.Row="2" Grid.Column="1">
+                                        <TextBox Text="{Binding Fax, Mode=TwoWay, ValidatesOnDataErrors=True}" TextChanged="OnFormItemChanged" />
+                                    </toolkit:DataField>
+                                    <toolkit:DataField Grid.Row="2" Grid.Column="2">
+                                        <TextBox Text="{Binding QQ, Mode=TwoWay, ValidatesOnDataErrors=True}" TextChanged="OnFormItemChanged" />
+                                    </toolkit:DataField>
+                                    <toolkit:DataField Grid.Row="3" Grid.Column="2">
+                                        <TextBox Text="{Binding Email, Mode=TwoWay, ValidatesOnDataErrors=True}" TextChanged="OnFormItemChanged" />
+                                    </toolkit:DataField>
+                                    <toolkit:DataField Grid.Row="3" Grid.ColumnSpan="2">
+                                        <TextBox Text="{Binding Address, Mode=TwoWay, ValidatesOnDataErrors=True}" TextChanged="OnFormItemChanged" />
+                                    </toolkit:DataField>
+                                    <toolkit:DataField  Grid.Row="4" Grid.ColumnSpan="2">
+                                        <TextBox Text="{Binding Description, Mode=TwoWay, ValidatesOnDataErrors=True}" TextChanged="OnFormItemChanged" />
+                                    </toolkit:DataField>
+                                    <toolkit:DataField Grid.Row="4" Grid.Column="2">
+                                        <ComboBox ItemsSource="{StaticResource ActiveStatusNames}" SelectionChanged="OnFormItemChanged"
+                                                        SelectedItem="{Binding Path=Status,Mode=TwoWay, Converter={StaticResource EnumToStringConverter}}" />
+                                    </toolkit:DataField>
+                                </Grid>
+                            </DataTemplate>
+                        </toolkit:DataForm.EditTemplate>
+                    </toolkit:DataForm>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <sdk:Label Content="用户角色" Style="{StaticResource ItemTitleLabelStyle}" Foreground="LightGray" Width="70" />
+                            <Button Content="添加角色" Style="{StaticResource GreenButton}" Click="OnAddUserRoleButtonClick" Height="28"></Button>
+                            <Button Content="删除角色" Style="{StaticResource GreenButton}" Click="OnDeleteUseRoelButtonClick" Margin="10,0" Height="28"></Button>
+                        </StackPanel>
+                        <controls2:DataGrid x:Name="UserRolesList" Grid.Row="1" Margin="5" AutoGenerateColumns="False">
+                            <controls2:DataGrid.Columns>
+                                <controls2:DataGridTextColumn Header="角色" Binding="{Binding Role.RoleName}" Width="160" IsReadOnly="True" />
+                                <controls2:DataGridTemplateColumn Header="启用日期" Width="140">
+                                    <controls2:DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <controls:DatePicker FirstDayOfWeek="Monday" Height="28" SelectedDate="{Binding StartTime, Mode=TwoWay}"/>
+                                        </DataTemplate>
+                                    </controls2:DataGridTemplateColumn.CellTemplate>
+                                </controls2:DataGridTemplateColumn>
+                                <controls2:DataGridTemplateColumn Header="停用日期" Width="140">
+                                    <controls2:DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <controls:DatePicker FirstDayOfWeek="Monday" Height="28" SelectedDate="{Binding  ExpireTime, Mode=TwoWay}" />
+                                        </DataTemplate>
+                                    </controls2:DataGridTemplateColumn.CellTemplate>
+                                </controls2:DataGridTemplateColumn>
+                            </controls2:DataGrid.Columns>
+                        </controls2:DataGrid>
+                        <StackPanel Orientation="Horizontal" Grid.Column="1">
+                            <sdk:Label Content="用户组织"  Style="{StaticResource ItemTitleLabelStyle}" Foreground="LightGray" Width="70" />
+                            <Button Content="选择组织" Style="{StaticResource GreenButton}" Click="OnSelectOrgButtonClick" Height="28"/>
+                        </StackPanel>
+                        <controls2:DataGrid Grid.Row="1" Grid.Column="1" x:Name="UserOrgList" Margin="5" AutoGenerateColumns="False">
+                            <controls2:DataGrid.Columns>
+                                <controls2:DataGridTextColumn Header="文件夹" Binding="{Binding Organization.Name}" Width="160" IsReadOnly="True" />
+                                <controls2:DataGridTemplateColumn Header="含下级文件夹" IsReadOnly="True">
+                                    <controls2:DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding IncludeChildOrg}" Height="28" IsEnabled="False" />
+                                        </DataTemplate>
+                                    </controls2:DataGridTemplateColumn.CellTemplate>
+                                </controls2:DataGridTemplateColumn>
+                                <controls2:DataGridTemplateColumn Header="启用日期" Width="140">
+                                    <controls2:DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <controls:DatePicker FirstDayOfWeek="Monday" Height="28" SelectedDate="{Binding StartTime, Mode=TwoWay}"/>
+                                        </DataTemplate>
+                                    </controls2:DataGridTemplateColumn.CellTemplate>
+                                </controls2:DataGridTemplateColumn>
+                                <controls2:DataGridTemplateColumn Header="停用日期" Width="140">
+                                    <controls2:DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <controls:DatePicker FirstDayOfWeek="Monday" Height="28" SelectedDate="{Binding  ExpireTime, Mode=TwoWay}" />
+                                        </DataTemplate>
+                                    </controls2:DataGridTemplateColumn.CellTemplate>
+                                </controls2:DataGridTemplateColumn>
+                            </controls2:DataGrid.Columns>
+                        </controls2:DataGrid>
+                    </Grid>
+                </Grid>
+            </controls:TabItem>
+            <controls:TabItem Header="特殊权限" Loaded="OnUserRightsTabLoaded">
+                <controls:TreeView x:Name="UserRightsTree">
+                </controls:TreeView>
+            </controls:TabItem>
+        </controls:TabControl>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+            <Button x:Name="OKButton" Content="确定" Click="OKButton_Click" Width="75" Height="25" Style="{StaticResource BlueButton}" />
+            <Button x:Name="CancelButton" Content="取消" Click="CancelButton_Click" Width="75" Height="25" Margin="10,0,0,0" Style="{StaticResource BlueButton}" />
+        </StackPanel>
+    </Grid>
+</controls:ChildWindow>

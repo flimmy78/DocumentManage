@@ -1,0 +1,42 @@
+﻿<controls:ChildWindow x:Class="DocumentManage.Views.Doc.WindowReleaseHistory"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+                      xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
+                      xmlns:util="clr-namespace:DocumentManage.Utility"
+                      xmlns:local="clr-namespace:DocumentManage.Controls"
+                      Width="550" Height="400" Loaded="OnWindowLoaded"
+           Title="文档发布记录">
+    <controls:ChildWindow.Resources>
+        <util:EnumToStringValueConverter x:Key="EnumStringConverter" />
+    </controls:ChildWindow.Resources>
+    <Grid x:Name="LayoutRoot" Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition  />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <sdk:DataGrid Margin="0,15" x:Name="DocumentReleaseHistoryGrid" AutoGenerateColumns="False" IsReadOnly="True">
+            <sdk:DataGrid.Columns>
+                <sdk:DataGridTextColumn Header="发布类型" Binding="{Binding ReleaseType, Converter={StaticResource EnumStringConverter}}" />
+                <sdk:DataGridTextColumn Header="浏览用户" Binding="{Binding ReviewUser.RealName}" />
+                <sdk:DataGridTextColumn Header="浏览组织" Binding="{Binding ReviewOrg.Name}" />
+                <sdk:DataGridTextColumn Header="发布时间" Binding="{Binding ReleaseTime, StringFormat=yyyy-MM-dd hh:mm:ss}" />
+                <sdk:DataGridTextColumn Header="发布人" Binding="{Binding ReleaseUser.RealName}" />
+                <sdk:DataGridTemplateColumn Header="操作">
+                    <sdk:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Click="OnDeleteRecordButtonClick" Style="{StaticResource OpacityButton}" Cursor="Hand">
+                                <Image Source="/DocumentManage;component/Images/delete-24.png" />
+                            </Button>
+                        </DataTemplate>
+                    </sdk:DataGridTemplateColumn.CellTemplate>
+                </sdk:DataGridTemplateColumn>
+            </sdk:DataGrid.Columns>
+        </sdk:DataGrid>
+        <local:BusyIndicator x:Name="BusyIndicator1" BusyContent="正在加载..." />
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+            <Button x:Name="OKButton" Content="确定" Click="OKButton_Click" Width="75" Height="25" Style="{StaticResource BlueButton}" />
+            <Button x:Name="CancelButton" Content="取消" Click="CancelButton_Click" Width="75" Height="25" Margin="10,0" Style="{StaticResource BlueButton}" />
+        </StackPanel>
+    </Grid>
+</controls:ChildWindow>

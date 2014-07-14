@@ -1,0 +1,31 @@
+﻿<navigation:Page x:Class="DocumentManage.Views.Sys.FileDesc" 
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           mc:Ignorable="d"
+           xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
+                 xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
+                 xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
+                 d:DesignWidth="640" d:DesignHeight="480"
+           Title="FileDesc Page">
+    <Grid x:Name="LayoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="Auto" MinHeight="100"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <sdk:Label Content="请选择文件类型"  Width="120" Style="{StaticResource ItemTitleLabelStyle}" Foreground="LightGray" />
+            <ComboBox x:Name="FileTypeCombBox" Width="200" VerticalAlignment="Center" ItemsSource="{StaticResource FileTypeNames}"
+                      SelectionChanged="OnFileTypeCombBoxSelectionChanged" />
+        </StackPanel>
+        <sdk:DataGrid Grid.Row="1" Margin="2" x:Name="FileDescTemplateGrid" AutoGeneratingColumn="OnFileDescGridAutoGenerateColumn" IsReadOnly="True" /> 
+        <toolkit:DataForm x:Name="FormEditFileDesc" Grid.Row="2" Margin="20,3" Background="{StaticResource ControlBackgroundNormal}" CommandButtonsVisibility="All"
+                          ItemsSource="{Binding ElementName=FileDescTemplateGrid, Path=ItemsSource, Mode=TwoWay}" AutoCommit="False"
+                          CurrentItem="{Binding ElementName=FileDescTemplateGrid, Path=SelectedItem, Mode=TwoWay}"
+                          CommitButtonContent="保存" CancelButtonContent="取消" CommitButtonStyle="{StaticResource BlueButton}"
+                          CancelButtonStyle="{StaticResource BlueButton}" AutoGeneratingField="OnFormAutoGenerateField"
+                          DeletingItem="OnDescItemDeletingItem" CurrentItemChanged="OnFormCurrentItemChanged" EditEnding="OnFormItemEditEnding" />
+    </Grid>
+</navigation:Page>

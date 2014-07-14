@@ -1,0 +1,31 @@
+﻿<navigation:Page x:Class="DocumentManage.Views.Req.Audited" 
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           mc:Ignorable="d"
+                 xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
+                 xmlns:Controls="clr-namespace:DocumentManage.Controls"
+           xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
+           d:DesignWidth="640" d:DesignHeight="480"
+           Title="归档申请-已审批">
+    <Grid x:Name="LayoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Height="30" Orientation="Horizontal" Margin="5">
+            <sdk:Label Content="按流程名查找" Style="{StaticResource ItemTitleLabelStyle}" />
+            <TextBox x:Name="txtSearchKey" Width="160" Height="25" VerticalAlignment="Center"></TextBox>
+            <Button Content="搜索" Height="25" Style="{StaticResource BlueButton}" VerticalAlignment="Center" Margin="3,0" Click="OnSearchButtonClick"></Button>
+        </StackPanel>
+        <sdk:DataGrid x:Name="ArchiveFlowGrid" Height="Auto" Grid.Row="1" AutoGenerateColumns="true"
+                      IsReadOnly="True" AutoGeneratingColumn="OnDataGridAutoGeneratingColumn" MinHeight="100">
+        </sdk:DataGrid>
+        <Controls:BusyIndicator Grid.Row="1" BusyContent="正在加载" x:Name="BusyIndicator1" />
+        <sdk:DataPager x:Name="ArchiveFlowPager" Grid.Row="2" HorizontalAlignment="Right" PageSize="20" 
+                       DisplayMode="FirstLastPreviousNextNumeric" />
+    </Grid>
+</navigation:Page>

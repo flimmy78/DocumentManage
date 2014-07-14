@@ -1,0 +1,41 @@
+﻿<navigation:Page x:Class="DocumentManage.Views.Sys.OrganizationMange" 
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           mc:Ignorable="d"
+           xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
+                 xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
+                 xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
+                 d:DesignWidth="640" d:DesignHeight="480"
+           Title="组织架构维护">
+    <Grid x:Name="LayoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Horizontal" Margin="10,2">
+            <Button Content="添加下级" IsEnabled="False" x:Name="btnCreateChild" Style="{StaticResource BlueButton}" Click="OnCreateChildButtonClick" />
+            <Button Content="添加同级" IsEnabled="False" x:Name="btnCreateSibling" Style="{StaticResource BlueButton}" Margin="10,0" Click="OnCreateSiblingButtonClick" />
+            <Button Content="删除组织" IsEnabled="False" x:Name="btnDeleteOrg" Style="{StaticResource BlueButton}" Click="OnDeleteOrgButtonClick" />
+        </StackPanel>
+        <sdk:TreeView x:Name="SysOrgTree" Margin="10" Grid.Row="1" Grid.RowSpan="2" SelectedItemChanged="OnOrgTreeSelectedItemChanged">
+            <sdk:TreeView.ItemTemplate>
+                <sdk:HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                    <sdk:Label Content="{Binding Name}" Foreground="White" />
+                </sdk:HierarchicalDataTemplate>
+            </sdk:TreeView.ItemTemplate>
+        </sdk:TreeView>
+        <toolkit:DataForm Grid.Row="1" Background="{StaticResource ControlBackgroundNormal}" Grid.Column="1" x:Name="FormEditOrgInfo" 
+                          AutoGeneratingField="OnDataFormAutoGenerateField" AutoCommit="False" CommandButtonsVisibility="Commit, Cancel"
+                          CurrentItem="{Binding ElementName=SysOrgTree, Path=SelectedItem}" VerticalAlignment="Top"
+                          CommitButtonContent="保存" CommitButtonStyle="{StaticResource BlueButton}"
+                          CancelButtonContent="取消" CancelButtonStyle="{StaticResource BlueButton}"
+                          EditEnding="OnDataFormEditEnding" BeginningEdit="OnDataFormBeginningEdit" />
+    </Grid>
+</navigation:Page>

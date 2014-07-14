@@ -1,0 +1,172 @@
+﻿<navigation:Page x:Class="DocumentManage.Views.Sys.DefineWorkflow" 
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           mc:Ignorable="d"
+           xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
+                 xmlns:sdk="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input"
+                 xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
+                 xmlns:util="clr-namespace:DocumentManage.Utility"
+                 xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data"
+                 xmlns:controls2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input"
+                 d:DesignWidth="640" d:DesignHeight="480" Style="{StaticResource PageStyle}"
+           Title="归档审批工作流定义">
+    <navigation:Page.Resources>
+        <util:EnumToStringValueConverter x:Name="EnumStringConverter" />
+    </navigation:Page.Resources>
+    <ScrollViewer x:Name="PageScrollViewer" Style="{StaticResource PageScrollViewerStyle}">
+        <Grid x:Name="LayoutRoot" Margin="0,25,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <sdk:Label Content="请选择要修改的工作流" Width="200" Style="{StaticResource ItemTitleLabelStyle}" Foreground="LightGray" />
+                <ComboBox x:Name="CurrentWorkflowList" DisplayMemberPath="FlowName" SelectedValuePath="FlowType" Width="300" VerticalAlignment="Center" />
+            </StackPanel>
+            <toolkit:DataForm x:Name="FormDefineWorkflow" Grid.Row="1" CurrentItem="{Binding Path=SelectedItem, Mode=TwoWay, ElementName=CurrentWorkflowList}" 
+                          ItemsSource="{Binding ElementName=CurrentWorkflowList, Path=ItemsSource}" CommitButtonContent="保存" CancelButtonContent="取消"
+                          CommitButtonStyle="{StaticResource BlueButton}" CancelButtonStyle="{StaticResource BlueButton}" AutoCommit="False" AutoEdit="True"
+                          Background="{StaticResource ControlBackgroundNormal}" EditEnding="OnWorkflowEditEnding" DeletingItem="OnWorkflowDeletingItem"
+                          ValidatingItem="OnWorkflowValidatingItem">
+                <toolkit:DataForm.EditTemplate>
+                    <DataTemplate>
+                        <StackPanel >
+                            <toolkit:DataField PropertyPath="FlowName">
+                                <TextBox Text="{Binding FlowName, Mode=TwoWay, ValidatesOnDataErrors=True}" />
+                            </toolkit:DataField>
+                            <toolkit:DataField PropertyPath="AuditSteps">
+                                <StackPanel MinHeight="100">
+                                    <controls:DataGrid Height="Auto" ItemsSource="{Binding AuditSteps, Mode=TwoWay}" x:Name="AuditStepsGrid"
+                                                   AutoGeneratingColumn="OnAuditStepsAutoGenerateColumn" />
+                                    <toolkit:DataForm x:Name="FormEditAuditStep" ItemsSource="{Binding AuditSteps, Mode=TwoWay}" 
+                                                  CurrentItem="{Binding ElementName=AuditStepsGrid, Path=SelectedItem, Mode=TwoWay}"
+                                                  CommitButtonContent="保存" CommitButtonStyle="{StaticResource GreenButton}"
+                                                  CancelButtonContent="取消" CancelButtonStyle="{StaticResource GreenButton}"
+                                                  Background="{StaticResource ControlBackgroundNormalGreen}" EditEnding="OnWorkflowStepEditEnding"
+                                                  DeletingItem="OnWorkflowItemDeletingItem" AutoEdit="True">
+                                        <toolkit:DataForm.EditTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <toolkit:DataField PropertyPath="AuditIndex">
+                                                        <TextBox Text="{Binding AuditIndex, Mode=TwoWay, ValidatesOnDataErrors=True}" />
+                                                    </toolkit:DataField>
+                                                    <toolkit:DataField PropertyPath="StepText">
+                                                        <TextBox Text="{Binding StepText, Mode=TwoWay, ValidatesOnDataErrors=True}" />
+                                                    </toolkit:DataField>
+                                                    <toolkit:DataField PropertyPath="AuditType">
+                                                        <ComboBox ItemsSource="{StaticResource AuditTypeNames}" 
+                                                              SelectedItem="{Binding AuditType, Mode=TwoWay, Converter={StaticResource EnumStringConverter}}"
+                                                              SelectionChanged="OnAuditTypeSelectionChanged" />
+                                                    </toolkit:DataField>
+                                                    <toolkit:DataField PropertyPath="AuditUser" x:Name="AutoHideField0" Tag="0|5">
+                                                        <controls2:AutoCompleteBox ValueMemberPath="RealName"
+                                                                               SelectedItem="{Binding AuditUser, Mode=TwoWay}"
+                                                                               IsTextCompletionEnabled="True" FilterMode="None"
+                                                                               Populating="OnUserAutoCompleteBoxPopulating">
+                                                            <controls2:AutoCompleteBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <TextBlock Width="120" Text="{Binding UserCode}" />
+                                                                        <TextBlock Width="120" Text="{Binding UserName}" />
+                                                                        <TextBlock Width="120" Text="{Binding RealName}" />
+                                                                    </StackPanel>
+                                                                </DataTemplate>
+                                                            </controls2:AutoCompleteBox.ItemTemplate>
+                                                        </controls2:AutoCompleteBox>
+                                                    </toolkit:DataField>
+                                                    <toolkit:DataField PropertyPath="AuditOrganization" x:Name="AutoHideField1" Tag="1" Visibility="Collapsed">
+                                                        <controls2:AutoCompleteBox ValueMemberPath="Name"
+                                                                               SelectedItem="{Binding AuditOrganization, Mode=TwoWay}"
+                                                                               IsTextCompletionEnabled="True" FilterMode="None"
+                                                                               Populating="OnOrgnizationCompleteBoxPopulating">
+                                                            <controls2:AutoCompleteBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <TextBlock Width="120" Text="{Binding Id}" />
+                                                                        <TextBlock Width="120" Text="{Binding Code}" />
+                                                                        <TextBlock Width="120" Text="{Binding Name}" />
+                                                                    </StackPanel>
+                                                                </DataTemplate>
+                                                            </controls2:AutoCompleteBox.ItemTemplate>
+                                                        </controls2:AutoCompleteBox>
+                                                    </toolkit:DataField>
+                                                    <toolkit:DataField PropertyPath="AuditOrgType" x:Name="AutoHideField2" Tag="2" Visibility="Collapsed">
+                                                        <ComboBox ItemsSource="{StaticResource OrganizationTypeNames}"
+                                                               SelectedItem="{Binding AuditOrgType, Mode=TwoWay, Converter={StaticResource EnumStringConverter}}"></ComboBox>
+                                                    </toolkit:DataField>
+                                                    <toolkit:DataField PropertyPath="AuditRole" x:Name="AutoHideField3" Tag="3" Visibility="Collapsed">
+                                                        <controls2:AutoCompleteBox MinimumPrefixLength="2" ValueMemberPath="RoleName"
+                                                                               SelectedItem="{Binding AuditRole, Mode=TwoWay, ValidatesOnDataErrors=False}"
+                                                                               IsTextCompletionEnabled="True" FilterMode="None" 
+                                                                               Populating="OnRoleAutoCompleteBoxPopulating">
+                                                            <controls2:AutoCompleteBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <TextBlock Width="120" Text="{Binding RoleCode}" />
+                                                                        <TextBlock Width="120" Text="{Binding RoleName}" />
+                                                                    </StackPanel>
+                                                                </DataTemplate>
+                                                            </controls2:AutoCompleteBox.ItemTemplate>
+                                                        </controls2:AutoCompleteBox>
+                                                    </toolkit:DataField>
+                                                    <toolkit:DataField PropertyPath="JcUsers" x:Name="AutoHideField4" Tag="4" Visibility="Collapsed">
+                                                        <Grid>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition/>
+                                                                <RowDefinition/>
+                                                            </Grid.RowDefinitions>
+                                                            <controls2:AutoCompleteBox ValueMemberPath="RealName" Width="400" HorizontalAlignment="Left"
+                                                                               IsTextCompletionEnabled="True" FilterMode="None" x:Name="JcUsersAutoCompleteBox"
+                                                                               Populating="OnUserAutoCompleteBoxPopulating">
+                                                                <controls2:AutoCompleteBox.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <StackPanel Orientation="Horizontal">
+                                                                            <TextBlock Width="120" Text="{Binding UserCode}" />
+                                                                            <TextBlock Width="120" Text="{Binding UserName}" />
+                                                                            <TextBlock Width="120" Text="{Binding RealName}" />
+                                                                        </StackPanel>
+                                                                    </DataTemplate>
+                                                                </controls2:AutoCompleteBox.ItemTemplate>
+                                                            </controls2:AutoCompleteBox>
+                                                            <Button Content="添加用户" Style="{StaticResource OrangeButton}" Margin="410,0,0,0" Click="OnAddJcUserButtonClick" />
+                                                            <ListBox Grid.Row="1"  ItemsSource="{Binding JcUsers, Mode=TwoWay}" x:Name="JcUsersListBox">
+                                                                <ListBox.ItemsPanel>
+                                                                    <ItemsPanelTemplate>
+                                                                        <toolkit:WrapPanel />
+                                                                    </ItemsPanelTemplate>
+                                                                </ListBox.ItemsPanel>
+                                                                <ListBox.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <StackPanel Margin="0,0,10,0" Orientation="Horizontal">
+                                                                            <sdk:Label Content="{Binding UserInfo.RealName}" />
+                                                                            <Button Style="{StaticResource OpacityButton}" Content="X" Foreground="Red" />
+                                                                        </StackPanel>
+                                                                    </DataTemplate>
+                                                                </ListBox.ItemTemplate>
+                                                            </ListBox>
+                                                        </Grid>
+                                                    </toolkit:DataField>
+                                                    <toolkit:DataField PropertyPath="Status">
+                                                        <ComboBox ItemsSource="{StaticResource ActiveStatuNames}" 
+                                                            SelectedItem="{Binding Status, Mode=TwoWay, Converter={StaticResource EnumStringConverter}}" />
+                                                    </toolkit:DataField>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </toolkit:DataForm.EditTemplate>
+                                    </toolkit:DataForm>
+                                </StackPanel>
+                            </toolkit:DataField>
+                            <toolkit:DataField PropertyPath="Status">
+                                <ComboBox ItemsSource="{StaticResource ActiveStatuNames}" 
+                                      SelectedItem="{Binding Status, Mode=TwoWay, Converter={StaticResource EnumStringConverter}}" />
+                            </toolkit:DataField>
+                        </StackPanel>
+                    </DataTemplate>
+                </toolkit:DataForm.EditTemplate>
+            </toolkit:DataForm>
+        </Grid>
+    </ScrollViewer>
+</navigation:Page>
