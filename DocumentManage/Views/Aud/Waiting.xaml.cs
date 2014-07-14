@@ -11,6 +11,7 @@ using DocumentManageService.Web;
 
 namespace DocumentManage.Views.Aud
 {
+    //审批中页面
     public partial class Waiting : Page
     {
         private readonly WorkflowDomainContext flowContext = new WorkflowDomainContext();

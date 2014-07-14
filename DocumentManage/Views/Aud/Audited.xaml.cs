@@ -18,7 +18,7 @@ using DocumentManageService.Web;
 
 namespace DocumentManage.Views.Aud
 {   
-    //审核页面
+    //已审批页面
     public partial class Audited : Page
     {
         private readonly WorkflowDomainContext flowContext = new WorkflowDomainContext();
@@ -28,36 +28,34 @@ namespace DocumentManage.Views.Aud
         public Audited()
         {
             InitializeComponent();
-            ArchiveFlowGrid.LoadingRow += ArchiveFlowGridLoadingRow;
+            ArchiveFlowGrid.LoadingRow += ArchiveFlowGridLoadingRow;  //添加DataGrid加载行事件
         }
 
         private void ArchiveFlowGridLoadingRow(object sender, DataGridRowEventArgs e)
         {
-            e.Row.MouseLeftButtonUp += OnGridRowLeftButtonUp;
+            e.Row.MouseLeftButtonUp += OnGridRowLeftButtonUp;   //添加了GataGrid左键双击事件
         }
 
+        //点击审批项目时处理
         private void OnGridRowLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            TimeSpan t = DateTime.Now.TimeOfDay;
-            if (ArchiveFlowGrid.Tag != null)
-            {
+            TimeSpan t = DateTime.Now.TimeOfDay;  //获取当前时间
+
+            if (ArchiveFlowGrid.Tag != null){
                 var oldT = (TimeSpan)ArchiveFlowGrid.Tag;
-                if ((t - oldT) < TimeSpan.FromMilliseconds(300))
-                {
+                if ((t - oldT) < TimeSpan.FromMilliseconds(300)){  // 延时300ms
                     var flow = ArchiveFlowGrid.SelectedItem as ArchiveWorkflow;
-                    if (flow != null)
-                    {
-                        if (NavigationService != null)
+                    if (flow != null){
+                        if (NavigationService != null){
+                            //导航到相对页面
                             NavigationService.Navigate(new Uri("Req/ViewApplication?ID=" + flow.FlowId, UriKind.Relative));
-                        else
-                        {
+                        }else{
                             BusyIndicator1.IsBusy = true;
                             BusyIndicator1.BusyContent = "正在读取流程信息...";
                             flowContext.GetArchiveWorkflow(flow.FlowId, obj =>
                             {
                                 BusyIndicator1.IsBusy = false;
-                                if (Utility.Utility.CheckInvokeOperation(obj))
-                                {
+                                if (Utility.Utility.CheckInvokeOperation(obj)){
                                     var child = new ChildWindow { Title = "查看归档流程-" + flow.FlowTitle };
                                     var win = new ViewApplication
                                     {
@@ -75,12 +73,13 @@ namespace DocumentManage.Views.Aud
             ArchiveFlowGrid.Tag = t;
         }
 
-        // 当用户导航到此页面时执行。
+        // 导航到 "已审批" 子页面
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             LoadArchiveWorkflow(AuditStatus.Audited);
         }
 
+        //加载文档工作流
         private void LoadArchiveWorkflow(AuditStatus status)
         {
             flowContext.GetAuditFlowByUser(AuthenticateStatus.CurrentUser.UserId, status, obj =>
@@ -95,19 +94,18 @@ namespace DocumentManage.Views.Aud
 
         }
 
+        //DataGrid自动产生列事件
         private void OnDataGridAutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
         {
-            if (e.PropertyType.IsEnum)
-            {
+            if (e.PropertyType.IsEnum){
                 e.Column = new DataGridTextColumn
                 {
                     Header = e.Column.Header,
                     Binding = new Binding(e.PropertyName) { Converter = enumToStringConverter }
                 };
             }
-
         }
-
+        //单击搜索按钮
         private void OnSearchButtonClick(object sender, RoutedEventArgs e)
         {
             if (pcv != null)
@@ -119,6 +117,7 @@ namespace DocumentManage.Views.Aud
             }
         }
 
+        //工作流通过标题过滤
         private bool FilterWorkflowByTitle(object obj)
         {
             var flow = obj as ArchiveWorkflow;
