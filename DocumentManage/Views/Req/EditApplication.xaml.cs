@@ -10,9 +10,10 @@ using DocumentManage.Entities;
 using DocumentManage.Utility;
 using DocumentManage.Views.Doc;
 using DocumentManageService.Web;
-
+//归档申请
 namespace DocumentManage.Views.Req
 {
+    //新建文档申请
     public partial class EditApplication : Page
     {
         private readonly WorkflowDomainContext flowContext = new WorkflowDomainContext();
@@ -20,26 +21,25 @@ namespace DocumentManage.Views.Req
         private string strParentFolder = string.Empty;
         private bool archiveFlowSaved;
 
-        public string BackUrl { get; set; }
+        public string BackUrl { get; set; }     //返回Url
 
-        public string OrgId { get; set; }
+        public string OrgId { get; set; }       //组织ID
 
-        public int FolderId { get; set; }
+        public int FolderId { get; set; }       //文件夹ID
 
-        public bool IsRevise { get; set; }
+        public bool IsRevise { get; set; }      //是否是修改
 
-        public Document ReviseFile { get; set; }
+        public Document ReviseFile { get; set; }  //修改文件
 
-        public ArchiveWorkflow ArchiveFlow { get; set; }
+        public ArchiveWorkflow ArchiveFlow { get; set; }  //文档流
 
         public EditApplication()
         {
             InitializeComponent();
-            Loaded += OnPageLoaded;
-            flowContext.GetAllWorkflows(obj =>
+            Loaded += OnPageLoaded;      //添加页面加载事件
+            flowContext.GetAllWorkflows(obj =>      //获取所有工作流
             {
-                if (Utility.Utility.CheckInvokeOperation(obj))
-                {
+                if (Utility.Utility.CheckInvokeOperation(obj)){  //检查操作是否完成
                     ArchiveFlowCombBox.ItemsSource = obj.Value.Where(o => o.Status == ActiveStatus.Active);
                     if (ArchiveFlowCombBox.Items.Count > 0)
                         ArchiveFlowCombBox.SelectedIndex = 0;
@@ -47,6 +47,7 @@ namespace DocumentManage.Views.Req
             }, null);
         }
 
+        //新建文档流程页面加载事件
         private void OnPageLoaded(object sender, RoutedEventArgs e)
         {
             if (NavigationService == null)
@@ -56,34 +57,34 @@ namespace DocumentManage.Views.Req
         private void BindWorkflowInfo()
         {
             new DocumentDomainContext().GetFolder(FolderId, obj =>
-                {
-                    if (Utility.Utility.CheckInvokeOperation(obj))
-                    {
-                        ArchiveFlow.FolderId = FolderId;
-                        CurrentFolderLabel.DataContext = obj.Value;
-                    }
-                }, null);
+            {
+                if (Utility.Utility.CheckInvokeOperation(obj)){  //检查操作
+                    ArchiveFlow.FolderId = FolderId;
+                    CurrentFolderLabel.DataContext = obj.Value;
+                }
+            }, null);
+
             new OrganizationDomainContext().GetOrganizationInfo(OrgId, obj =>
-                {
-                    if (Utility.Utility.CheckInvokeOperation(obj))
-                    {
-                        CurrentOrganizationLabel.DataContext = obj.Value;
-                    }
-                }, null);
-            if (ArchiveFlow == null)
-                ArchiveFlow = new ArchiveWorkflow();
+            {
+                if (Utility.Utility.CheckInvokeOperation(obj)){ //检查操作
+                    CurrentOrganizationLabel.DataContext = obj.Value;
+                }
+            }, null);
+
+            if (ArchiveFlow == null) ArchiveFlow = new ArchiveWorkflow();
             IsRevise = ArchiveFlow.IsRevise;
             btnUploadFile.Content = IsRevise ? "更新文件" : "添加文件";
-            if (IsRevise && ArchiveFlow.Files != null && ArchiveFlow.Files.Count > 0)
-            {
+
+            if (IsRevise && ArchiveFlow.Files != null && ArchiveFlow.Files.Count > 0){
                 ReviseFile = ArchiveFlow.Files[0].DocumentInfo;
             }
+
             Title = "编辑归档流程 - " + ArchiveFlow.FlowTitle;
             LayoutRoot.DataContext = ArchiveFlow;
             UploadedFilesList.ItemsSource = ArchiveFlow.Files;
         }
 
-        // 当用户导航到此页面时执行。
+        //当用户导航到此页面时执行。
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if (NavigationService != null)
@@ -160,6 +161,7 @@ namespace DocumentManage.Views.Req
             }
         }
 
+        //返回按钮点击事件
         private void OnBackToBrowseButtonClick(object sender, RoutedEventArgs e)
         {
             if (NavigationService != null && NavigationService.CanGoBack)
@@ -180,6 +182,7 @@ namespace DocumentManage.Views.Req
             }
         }
 
+        //保存流程
         private void OnSaveWrokflowButtonClick(object sender, RoutedEventArgs e)
         {
             if (ValidateWorkflowInfo())
@@ -189,6 +192,7 @@ namespace DocumentManage.Views.Req
             }
         }
 
+        //提交流程
         private void OnSubmitWorkflowButtonClick(object sender, RoutedEventArgs e)
         {
             if (ValidateWorkflowInfo())
@@ -249,6 +253,7 @@ namespace DocumentManage.Views.Req
             return flow.Files.FirstOrDefault(o => o.DocumentInfo.Identity < 1);
         }
 
+        //上传文件并保存流
         private void UploadFileAndSaveFlow(AuditStatus status, ArchiveWorkflow flow)
         {
             var file = GetNextUploadFile(flow);
@@ -289,48 +294,46 @@ namespace DocumentManage.Views.Req
                 DoSaveArchiveWorkflow(status, flow);
             }
         }
-
+        
+        //检查工作流信息是否有效
         private bool ValidateWorkflowInfo()
         {
             var flow = LayoutRoot.DataContext as ArchiveWorkflow;
-            if (flow == null)
-            {
+            if (flow == null){
                 CustomMessageBox.Alert("获取工作流实例失败，请重试！");
                 return false;
             }
-            if (string.IsNullOrEmpty(flow.FlowTitle))
-            {
+
+            if (string.IsNullOrEmpty(flow.FlowTitle)){
                 CustomMessageBox.Alert("请输入工作流标题！");
                 txtFlowTitle.Focus();
                 return false;
             }
-            if (flow.Files == null || flow.Files.Count < 1)
-            {
+
+            if (flow.Files == null || flow.Files.Count < 1){
                 CustomMessageBox.Alert("请选择您要提交的文件！");
                 return false;
             }
-            if (ArchiveFlowCombBox.SelectedIndex == -1)
-            {
+
+            if (ArchiveFlowCombBox.SelectedIndex == -1) {
                 CustomMessageBox.Alert("请选择归档流程！");
                 ArchiveFlowCombBox.Focus();
                 return false;
             }
-            if (flow.FlowType < 1)
-            {
+
+            if (flow.FlowType < 1){
                 flow.FlowType = Convert.ToInt32(ArchiveFlowCombBox.SelectedValue);
             }
+
             var doc = flow.Files[0].DocumentInfo;
-            if (IsRevise && doc.Identity < 1)
-            {
+            if (IsRevise && doc.Identity < 1){
                 doc.Revision = ReviseFile.Revision + 1;
                 doc.CreatedBy = AuthenticateStatus.CurrentUser.UserId;
                 doc.CreateTime = DateTime.Now;
                 doc.FilePath = string.Empty;
                 doc.Status = DocumentStatus.Draft;
-                if (doc.Descriptions != null)
-                {
-                    foreach (var desc in doc.Descriptions)
-                    {
+                if (doc.Descriptions != null){
+                    foreach (var desc in doc.Descriptions){
                         desc.Identity = 0;
                     }
                 }
@@ -338,6 +341,7 @@ namespace DocumentManage.Views.Req
             return true;
         }
 
+        //点击上传文件按钮
         private void OnUploadFileButtonClick(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFileDialog();
@@ -394,6 +398,7 @@ namespace DocumentManage.Views.Req
             }
         }
 
+        //流类型选择改变事件, SelectionChanged="OnFlowTypeSelectionChanged"，  ComboBox的SelectionChanged事件
         private void OnFlowTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var flowType = Convert.ToInt32(ArchiveFlowCombBox.SelectedValue);
@@ -422,10 +427,10 @@ namespace DocumentManage.Views.Req
 
         }
 
+        //点击上传文件夹按钮事件
         private void OnUploadFolderButtonClick(object sender, RoutedEventArgs e)
         {
-            if (IsRevise)
-            {
+            if (IsRevise){
                 CustomMessageBox.Show("修订文件时不能上传文件夹");
                 return;
             }
@@ -434,6 +439,7 @@ namespace DocumentManage.Views.Req
             dialog.Show();
         }
 
+        //选择文件夹完毕事件
         private void OnSelectFolderCompleted(object sender, EventArgs e)
         {
             var dlg = sender as FolderBrowser;
@@ -449,6 +455,7 @@ namespace DocumentManage.Views.Req
             }
         }
 
+        //获取文件夹下的文档
         private void FetchFolderDocuments(DirectoryInfo dir)
         {
             if (ArchiveFlow.Files != null && ArchiveFlow.Files.Count > 1000)
@@ -476,22 +483,20 @@ namespace DocumentManage.Views.Req
                 Descriptions = null,
                 Content = null
             };
-            if (ArchiveFlow.Files == null)
-                ArchiveFlow.Files = new List<WorkflowFileInfo>();
+
+            if (ArchiveFlow.Files == null) ArchiveFlow.Files = new List<WorkflowFileInfo>();
             ArchiveFlow.Files.Add(new WorkflowFileInfo { DocumentId = folder.DocumentId, DocumentInfo = folder });
 
-            foreach (var file in dir.EnumerateFiles())
-            {
-                if (!file.Attributes.HasFlag(FileAttributes.Hidden))
-                {
-                    if (file.Length > 1024 * 1024 * 30)
-                    {
+            foreach (var file in dir.EnumerateFiles()){
+                if (!file.Attributes.HasFlag(FileAttributes.Hidden)){
+                    if (file.Length > 1024 * 1024 * 30){
                         MessageBox.Show(string.Format("文件[{0}]的大小超过30M，系统不允许上传大于30M的文件！",
                             Application.Current.IsRunningOutOfBrowser ? file.FullName : file.Name));
                         continue;
                     }
+
                     var tmpFile = new Document
-                     {
+                    {
                          CreateTime = DateTime.Now,
                          CreatedBy = AuthenticateStatus.CurrentUser.UserId,
                          Identity = 0,
@@ -513,14 +518,14 @@ namespace DocumentManage.Views.Req
                     ArchiveFlow.Files.Add(new WorkflowFileInfo { DocumentId = tmpFile.DocumentId, DocumentInfo = tmpFile });
                 }
             }
-            foreach (var subFolder in dir.EnumerateDirectories())
-            {
+
+            foreach (var subFolder in dir.EnumerateDirectories()){
                 FetchFolderDocuments(subFolder);
-                if (ArchiveFlow.Files.Count > 1000)
-                    break;
+                if (ArchiveFlow.Files.Count > 1000) break;
             }
         }
 
+        //点击删除文件按钮
         private void OnDeleteFileButtonClick(object sender, RoutedEventArgs e)
         {
             if (UploadedFilesList.SelectedItems.Count < 1)

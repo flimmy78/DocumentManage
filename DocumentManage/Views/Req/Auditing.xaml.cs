@@ -8,9 +8,10 @@ using System.Windows.Navigation;
 using DocumentManage.Entities;
 using DocumentManage.Utility;
 using DocumentManageService.Web;
-
+//归档申请
 namespace DocumentManage.Views.Req
 {
+    //归档申请 -- 审批中页面
     public partial class Auditing : Page
     {
         private readonly WorkflowDomainContext flowContext = new WorkflowDomainContext();
